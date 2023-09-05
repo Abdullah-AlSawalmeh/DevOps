@@ -12,8 +12,11 @@ microk8s status --wait-ready
 ### Use add-ons
 microk8s enable dns
 microk8s enable hostpath-storage
+microk8s enable registry
 ### kubeconfig
 microk8s config view > /home/work/.kube/config
+
+
 ```
 
 ### Istio
@@ -57,4 +60,14 @@ kubectl -n monitoring patch \
 kubectl -n monitoring delete pvc -l app.kubernetes.io/instance=signoz
 kubectl delete namespace monitoring
 
+```
+
+### mpay
+
+```bash
+helm delete --no-hooks mpay -n mpay
+helm upgrade --install mpay . -f ../../__abd_local.yaml -n mpay
+kubectl scale deploy mpay-core-core  -n mpay --replicas 0
+kubectl port-forward pods/mpay-core-core-77bfcc55c8-pqnvt 7070:7070
+docker run --rm --user root -it --entrypoint bash localhost:32000/mars/mpay-modee-core
 ```
