@@ -57,8 +57,13 @@ helm -n platform monitoring "signoz"
 kubectl -n monitoring patch \
   clickhouseinstallations.clickhouse.altinity.com/my-release-clickhouse \
   -p '{"metadata":{"finalizers":[]}}' --type=merge
+kubectl patch pvc data-volumeclaim-template-chi-signoz-clickhouse-cluster-0-0-0 -n monitoring -p '{"metadata":{"finalizers":null}}'
+kubectl patch pvc storage-signoz-alertmanager-0 -n monitoring -p '{"metadata":{"finalizers":null}}'
+kubectl patch pvc data-signoz-zookeeper-0 -n monitoring -p '{"metadata":{"finalizers":null}}'
+kubectl patch pvc signoz-db-signoz-query-service-0 -n monitoring -p '{"metadata":{"finalizers":null}}'
 kubectl -n monitoring delete pvc -l app.kubernetes.io/instance=signoz
 kubectl delete namespace monitoring
+
 
 ```
 
